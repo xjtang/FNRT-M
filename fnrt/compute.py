@@ -1,26 +1,39 @@
-import numpy as np
-import xarray as xr
-import stackstac
-import planetary_computer
-import xrspatial.multispectral as ms
+""" Module for parallel computing
+"""
+
+
+import os
 
 from dask_gateway import GatewayCluster
-from pystac_client import Client
+from dask.distributed import PipInstall, Lock
 
 
-catalog = Client.open("https://planetarycomputer.microsoft.com/api/stac/v1")
+def install():
+    """
+    Install package on workers.
+    """
 
-def search_images(catalog, collection, geometry, start, end, limit=1000):
-    search = catalog.search(
-        intersects = geometry,
-        datetime = start + '/' + end,
-        collections = [collection],
-        limit = limit
-    )
-    return list(search.get_items())
+    os.system('pip install pysptools')
+    os.system('pip install cvxopt')
 
-def get_cluster():
+
+def get_cluster(n=20):
+    """
+    Create a dask cluster.
+
+    Args:
+        n: number of workers
+
+    Returns:
+        (dask cluster, dask client)
+    """
+
     cluster = GatewayCluster()
+    cluster.scale(n)
     client = cluster.get_client()
-    cluster.adapt(minimum=4, maximum=24)
-    return cluster
+    plugin = PipInstall(packages=['pysptools', 'cvxopt'], pip_options=['--upgrade'])
+    client.register_worker_plugin(plugin)
+    return (cluster, client)
+
+
+# End
