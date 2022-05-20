@@ -50,7 +50,7 @@ def unmix(M, U):
     return unmixed
 
 
-def calculate_ndfi(M, scale=10000):
+def calculate_ndfi(M, scale=10000, cfthreshold=0.2):
     """
     Calculate NDFI.
 
@@ -69,7 +69,7 @@ def calculate_ndfi(M, scale=10000):
     cloud = M[:, 4]
 
     gv_frac = (gv / (1 - shade)) + (npv + soil)
-    mask = ((cloud < 0.2) & (shade < 1) & (gv_frac > 0)).astype('uint16')
+    mask = ((cloud < cfthreshold) & (shade < 1) & (gv_frac > 0)).astype('uint16')
     ndfi = (gv / (1 - shade) - (npv + soil)) / gv_frac * scale
     ndfi[mask==0] = np.nan
     return ndfi
