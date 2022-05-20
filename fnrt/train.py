@@ -36,7 +36,7 @@ def model_fit(Y, X):
     )
 
 
-def training(M, U, X, scale=10000):
+def training(M, U, X, scale=10000, cfthreshold=0.2):
     """
     Full training process.
 
@@ -51,7 +51,7 @@ def training(M, U, X, scale=10000):
     """
 
     unmixed = unmix(M, U)
-    Y = calculate_ndfi(unmixed, 10000)
+    Y = calculate_ndfi(unmixed, scale, cfthreshold)
     if (Y[~np.isnan(Y)].size == 0):
         return np.array(
             [0, 0, 0, 0, 0],
@@ -62,7 +62,8 @@ def training(M, U, X, scale=10000):
         return model_fit(Y, X)
 
 
-def xr_training(col, endmembers, chunksize=32, scale=10000):
+def xr_training(col, endmembers, chunksize=32, scale=10000,
+                days_in_year=365.25, cfthreshold=0.2):
     """
     Apply full training process on entire xarray.
 
@@ -76,7 +77,7 @@ def xr_training(col, endmembers, chunksize=32, scale=10000):
         xarray data array
     """
 
-    X = construct_dependents(col)
+    X = construct_dependents(col, days_in_year)
     col2 = col.chunk((-1, -1, chunksize, chunksize))
     return (
         xr.apply_ufunc(
@@ -84,7 +85,8 @@ def xr_training(col, endmembers, chunksize=32, scale=10000):
             input_core_dims=[['time', 'band']],
             output_core_dims=[['time', 'fit']],
             exclude_dims=set(('time', 'band')),
-            kwargs={'X': X, 'U': endmembers,'scale': scale},
+            kwargs={'X': X, 'U': endmembers,'scale': scale,
+                'cfthreshold': cfthreshold},
             dask='parallelized',
             vectorize=True,
             output_dtypes=[col.dtype],
