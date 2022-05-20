@@ -3,6 +3,7 @@
 
 
 import logging
+from .process import fnrt_train_landsat
 
 
 log_format = '|%(asctime)s|%(levelname)s|%(module)s|%(lineno)s||%(message)s'
@@ -17,7 +18,8 @@ log.setLevel(logging.INFO)
 
 
 __all__ = [
-    'log'
+    'log',
+    'fnrt_train_landsat'
 ]
 
 
