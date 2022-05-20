@@ -11,13 +11,9 @@ import xarray as xr
 import rioxarray as rioxr
 
 from pystac_client import Client
-from .utilities import get_bbox, get_epsg
 from dask.distributed import Lock
-
-
-#catalog = Client.open('https://planetarycomputer.microsoft.com/api/stac/v1')
-catalog = Client.open('https://planetarycomputer-staging.microsoft.com/api/stac/v1')
-landsat = 'landsat-8-c2-l2'
+from .utilities import get_bbox, get_epsg
+from .parameter import defaults
 
 
 def read_file(file):
@@ -114,10 +110,11 @@ def search_landsat_images(start, end, geometry, limit=1000):
         items
     """
 
+    catalog = Client.open(defaults['CATALOG'])
     search = catalog.search(
         intersects = geometry,
         datetime = start + '/' + end,
-        collections = [landsat],
+        collections = [defaults['LANDSAT']],
         limit = limit,
         query={'landsat:collection_category': {'eq': 'T1'},
                'eo:cloud_cover': {'lt': 90}}
