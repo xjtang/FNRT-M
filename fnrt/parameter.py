@@ -6,6 +6,11 @@ import numpy as np
 
 
 defaults = {
+    # planetary computer
+    'CATALOG' = 'https://planetarycomputer-staging.microsoft.com/api/stac/v1',
+    #'CATALOG' = 'https://planetarycomputer.microsoft.com/api/stac/v1',
+    'LANDSAT' = 'landsat-c2-l2',
+
     # study time periods
     'TRAIN_START': '2019-01-01',
     'TRAIN_END': '2021-12-31',
@@ -18,7 +23,7 @@ defaults = {
 
     # other common parameters
     'RES': 30,
-    'SCALE_FACTOR': 0.0001,
+    'SCALE_FACTOR': 10000,
     'DAYS_IN_YEAR': 365.25,
 
     # Landsat parameters
@@ -53,12 +58,13 @@ defaults = {
 
     # endmembers
     'UNMIX': {
-        'GV': np.array([[500, 900, 400, 6100, 3000, 1000],
-                       [1400, 1700, 2200, 3000, 5500, 3000],
-                       [2000, 3000, 3400, 5800, 6000, 5800],
-                       [0, 0, 0, 0, 0, 0],
-                       [9000, 9600, 8000, 7800, 7200, 6500]], dtype=np.int16),
-        'CF_THRESHOLD': 0.05
+        'ENDMEMBERS': np.array([[500, 900, 400, 6100, 3000, 1000],
+                                [1400, 1700, 2200, 3000, 5500, 3000],
+                                [2000, 3000, 3400, 5800, 6000, 5800],
+                                [0, 0, 0, 0, 0, 0],
+                                [9000, 9600, 8000, 7800, 7200, 6500]],
+                                dtype=np.int16),
+        'CF_THRESHOLD': 0.2
     }
 }
 
