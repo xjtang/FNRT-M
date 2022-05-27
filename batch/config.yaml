@@ -1,7 +1,0 @@
-# file: config.yaml
-name: 'fnrt'
-image: 'mcr.microsoft.com/planetary-computer/python:latest'
-code: 'train_landsat_tile.py'
-args:
-  - 'python'
-  - 'train_landsat_tile.py'
