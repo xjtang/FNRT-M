@@ -7,9 +7,9 @@ import numpy as np
 
 defaults = {
     # planetary computer
-    'CATALOG' = 'https://planetarycomputer-staging.microsoft.com/api/stac/v1',
+    'CATALOG': 'https://planetarycomputer-staging.microsoft.com/api/stac/v1',
     #'CATALOG' = 'https://planetarycomputer.microsoft.com/api/stac/v1',
-    'LANDSAT' = 'landsat-c2-l2',
+    'LANDSAT': 'landsat-c2-l2',
 
     # study time periods
     'TRAIN_START': '2019-01-01',
